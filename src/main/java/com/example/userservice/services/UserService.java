@@ -1,5 +1,7 @@
 package com.example.userservice.services;
 
+import com.example.userservice.models.User;
+
 public interface UserService {
-    public void signUp(String name,String email, String password);
+    public User signUp(String name, String email, String password);
 }

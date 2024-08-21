@@ -1,7 +1,9 @@
 package com.example.userservice.controllers;
 
 import com.example.userservice.dtos.SignupRequestDto;
+import com.example.userservice.models.User;
 import com.example.userservice.services.UserService;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +20,18 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<SignupRequestDto> signup(@RequestBody SignupRequestDto dto) {
-        userService.signUp(dto.getUsername(), dto.getEmail(), dto.getPassword());
-        return null;
+    public ResponseEntity<User> signup(@RequestBody SignupRequestDto dto) {
+        try {
+            String username = dto.getUsername();
+            String password = dto.getPassword();
+            String email = dto.getEmail();
+            if(username == null || password == null || email == null) {
+                return ResponseEntity.badRequest().body(null);
+            }
+            User user=userService.signUp(username, email,password);
+            return ResponseEntity.ok(user);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatusCode.valueOf(401));
+        }
     }
 }
